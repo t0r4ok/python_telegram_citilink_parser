@@ -1,1 +1,34 @@
-import requestsfrom bs4 import BeautifulSoupURL_H = 'https://www.citilink.ru'URL = "https://www.citilink.ru/catalog/videokarty/"gpu_name = input("введите название видиокарты: ")def get_urls(URL, params=''):    r = requests.get(URL, params=params)    data = r.text    print(r)    return rdef Content_get(html):    soup = BeautifulSoup(html, 'html.parser')    scan = soup.find_all("div",                         class_="product_data__gtm-js product_data__pageevents-js ProductCardHorizontal js--ProductCardInListing js--ProductCardInWishlist")    elements = []    if gpu_name != "":        for e in scan:            elements.append(                {                    'title': e.find('div', class_="ProductCardHorizontal__header-block", ).get_text(),                    'linl_g': URL_H + e.find('div', class_="ProductCardHorizontal__header-block", ).find('a').get('href')                }            )    else:        for e in scan:            elements.append(                {                    'title': e.find('div', class_="ProductCardHorizontal__header-block").get_text(),                    'link_g': URL_H + e.find('div', class_="ProductCardHorizontal__header-block").find('a').get('href')                }            )    print(elements)html = get_urls(URL)Content_get(html.text)# print([i for i in url_cart if name in i])
+import requests
+from bs4 import BeautifulSoup
+
+url = 'https://www.citilink.ru/catalog/videokarty/'
+r = requests.get(url)
+
+
+def parse_videocart(name):
+    soup = BeautifulSoup(r.text , 'html.parser')
+    url_cart = []
+    elements = []
+    for i in soup.find_all('a'):
+        try:
+            if '/product/videokarta' in i.get('href'):
+                if 'www.citilink.ru/' not in i.get('href'):
+                    url_cart.append(f"www.citilink.ru{i.get('href')}")
+                else:
+                    url_cart.append(i.get('href'))
+
+                    scan = soup.find_all("div", class_="product_data__gtm-js product_data__pageevents-js ProductCardHorizontal js--ProductCardInListing js--ProductCardInWishlist")
+
+                    for e in scan:
+                        data_params = e.get('data-params')
+                        elements.append(
+                            {
+                                'name': e.find('a', class_="ProductCardHorizontal__title  Link js--Link Link_type_default").get_text(strip=True)
+                            }
+                        )
+
+        except:
+            continue
+    print(elements)
+    table_video_cart = " ".join([i for i in url_cart if name in i])
+    return table_video_cart if len(table_video_cart) > 0 else "Данная видеокарта отсутствует "

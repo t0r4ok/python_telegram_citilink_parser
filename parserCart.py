@@ -9,6 +9,7 @@ def parse_videocart(name):
     soup = BeautifulSoup(r.text , 'html.parser')
     url_cart = []
     elements = []
+
     for i in soup.find_all('a'):
         try:
             if '/product/videokarta' in i.get('href'):
@@ -20,7 +21,7 @@ def parse_videocart(name):
                     scan = soup.find_all("div", class_="product_data__gtm-js product_data__pageevents-js ProductCardHorizontal js--ProductCardInListing js--ProductCardInWishlist")
 
                     for e in scan:
-                        data_params = e.get('data-params')
+                        print(e.get('data-params'))
                         elements.append(
                             {
                                 'name': e.find('a', class_="ProductCardHorizontal__title  Link js--Link Link_type_default").get_text(strip=True)

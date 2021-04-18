@@ -1,2 +1,7 @@
-# python_telegram_citilink_parser
+# python citilink parser (TG bot)
+
+LIBS:
+
+
 GPU parser
+[This link](http://example.net/)
